@@ -1,5 +1,11 @@
 # fix-react2shell-next
 
+## 1.0.18
+
+### Patch Changes
+
+- 606448b: special case 15.6.0-canary.58
+
 ## 1.0.17
 
 ### Patch Changes
