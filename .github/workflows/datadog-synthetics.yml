@@ -8,7 +8,7 @@
 
 # To get started:
 
-# 1. Add your Datadog API (DD_API_KEY) and Application Key (DD_APP_KEY) as secrets to your GitHub repository. For more information, see: https://docs.datadoghq.com/account_management/api-app-keys/.
+# 1. Add your Datadog API (DD_API_KEY) and Application Key (DD_APP_KEY) as secrets to your GitHub repository. For more information, see: https://docs.datadoghq.com/account_management/api-app-keys/
 # 2. Start using the action within your workflow
 
 name: Run Datadog Synthetic tests
@@ -26,13 +26,16 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Check Datadog credentials
+      if: ${{ secrets.DD_API_KEY == '' || secrets.DD_APP_KEY == '' }}
+      run: echo "Skipping Datadog Synthetic tests because DD_API_KEY and/or DD_APP_KEY are not configured."
+
     # Run Synthetic tests within your GitHub workflow.
     # For additional configuration options visit the action within the marketplace: https://github.com/marketplace/actions/datadog-synthetics-ci
     - name: Run Datadog Synthetic tests
+      if: ${{ secrets.DD_API_KEY != '' && secrets.DD_APP_KEY != '' }}
       uses: DataDog/synthetics-ci-github-action@87b505388a22005bb8013481e3f73a367b9a53eb # v1.4.0
       with:
-        api_key: ${{secrets.DD_API_KEY}}
-        app_key: ${{secrets.DD_APP_KEY}}
+        api_key: ${{ secrets.DD_API_KEY }}
+        app_key: ${{ secrets.DD_APP_KEY }}
         test_search_query: 'tag:e2e-tests' #Modify this tag to suit your tagging strategy
-
-
